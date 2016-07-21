@@ -44,7 +44,7 @@ h1,form {
 
   <h1 class="double">Library Comparison</h1><br><br><br><br>
 
-<form action =/ImageLibrary/image method="get">
+<form action =/ImgCompression/image method="get">
 Image URL: <input type="text"    placeholder="Image URL" id="image1" name="image1"style="width: 1000px; " ></input>
          <input type="submit" value="Go">
     </form>
@@ -54,8 +54,5 @@ FolderChooser f = new FolderChooser();
 f.folder();
 %>
 
-       
-   
-            
 </body>
 </html>

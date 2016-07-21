@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<project name="ImgCompression" basedir="." default="deploywar">
+
+	<property file="build.properties"/>
+	<property name ="src.dir" value="src"/>
+	<property name ="WebContent.dir" value="WebContent"/>
+	<property name ="build.dir" value="${WebContent.dir}/WEB-INF/classes"/>
+	<property name="name" value="ImgCompression"/>
+	
+	<path id="master-classpath">
+		<fileset dir="${WebContent.dir}/WEB-INF/lib">		
+			<include name="*.jar"/>
+		</fileset>
+		<pathelement path="${build.dir}"/>
+	</path>
+	
+	<target name="usage">
+		<echo message=""/>
+		   <echo message="${name} build file"/>
+		   <echo message="deploywar --> Deploy application as a WAR file"/>
+	</target>
+	
+	<target name="build" description="Compile main	src java files">
+		<mkdir dir="${build.dir}"/>
+		<javac destdir="${build.dir}" source="1.7" target="1.7" debug="true" 
+			 optimize="false" failonerror="true">
+		<src path="${src.dir}"/>
+			<classpath refid="master-classpath"/>
+		</javac>
+	</target>
+
+	<target name="deploywar" depends="build" description="Deploy application as a war file">
+		<war destfile="${deploy.path}/${name}.war" webxml="${WebContent.dir}/WEB-INF/web.xml">
+			<fileset dir="${WebContent.dir}">
+				<include name="**/*.*"/>
+			</fileset>
+		</war>
+		
+		<copy todir="${deploy.path}" preservelastmodified="true">
+			<fileset dir=".">
+				<include name=".war"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="clean" depends="build" description="clean output directories">
+		<delete>
+			<fileset dir="${build.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<!-- ============================================================ -->
+	<!-- Tomcat tasks -->
+	<!-- ============================================================ -->
+
+	<path id="catalina-ant-classpath">
+	<!-- We need the Catalina jars for Tomcat -->
+
+	   <fileset dir="${appserver.lib}">
+	    <include name="catalina-ant.jar"/>
+	   	<include name="tomcat-coyote.jar"/>
+	    <include name="tomcat-util.jar"/>
+	   </fileset>
+		 <fileset dir="${appserver.home}/bin">
+		    <include name="tomcat-juli.jar"/>
+		 </fileset>
+	</path>
+ 
+	<taskdef name="install" classname="org.apache.catalina.ant.DeployTask">
+	   <classpath refid="catalina-ant-classpath"/>
+	</taskdef>
+	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask">
+	   <classpath refid="catalina-ant-classpath"/>
+	</taskdef>
+	<taskdef name="list" classname="org.apache.catalina.ant.ListTask">
+	   <classpath refid="catalina-ant-classpath"/>
+	</taskdef>
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
+	   <classpath refid="catalina-ant-classpath"/>
+	</taskdef>
+	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+	   <classpath refid="catalina-ant-classpath"/>
+	</taskdef>
+
+	
+</project>
